@@ -71,5 +71,9 @@
     .card {
       padding: 18px;
     }
+    form {
+      max-width: 100%;
+      margin: 0
+  }
   }
   
