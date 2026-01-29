@@ -1,0 +1,29 @@
+/* Header */
+.header {
+    background: #0B6FA9;
+     color:#fff; 
+     padding:30px 0;
+    }
+.header .logo {font-weight:bold; font-size:1.5rem;}
+.header .logo span{font-weight:400;}
+.header-flex {display:flex; justify-content:space-between; align-items:center;}
+.nav a {margin-left:15px; color:#fff;}
+.nav a.active {text-decoration:underline;}
+.btn.small{padding:6px 12px; border:none; border-radius:var(--radius); background:#fff; color:var(--bleu-principal); font-size:0.9rem;}
+.btn.green{background:var(--vert-action);  margin-right: 20px; color:#fff;}
+.btn.outline{background:none;  border:1px solid #ccc;}
+
+/* Footer */
+.footer{background:var(--gris-clair);  padding:20px 0; margin-top:40px;}
+.container.footer-grid{
+    display: flex;
+    gap: 50px;
+}
+.footer p, .footer strong{margin:0;}
+
+/* Section */
+.section{padding:40px 0;}
+.section.gray{background: var(--gris-clair);}
+.hero{padding:60px 0; text-align:center; background: var(--bleu-principal); color:#fff;}
+.hero-buttons{margin-top:20px;}
+.hero-buttons .btn{margin:5px;}

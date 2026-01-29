@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>FAQ & Légal – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">TOGO<span>ALERT</span></div>
+
+    <nav class="nav">
+      <a href="../index.html">Accueil</a>
+      <a href="./about.html">À propos</a>
+      <a href="./faq.html" class="active">FAQ & Légal</a>
+      <a href="./login.html" class="btn small">Connexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero small">
+  <div class="container">
+    <h1>FAQ & Informations légales</h1>
+    <p>
+      Retrouvez ici les réponses à vos questions
+      et les informations sur la gestion des données.
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section">
+  <div class="container">
+    <h2>Questions fréquentes</h2>
+
+    <div class="faq">
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Qui peut utiliser la plateforme TOGOALERT ?
+        </button>
+        <div class="faq-answer">
+          Tout habitant de la ville de Kara peut utiliser la plateforme
+          pour signaler un problème ou consulter les informations publiques.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Les signalements sont-ils anonymes ?
+        </button>
+        <div class="faq-answer">
+          Oui. Les citoyens peuvent choisir de rester anonymes.
+          Les informations de contact sont facultatives.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Combien de temps faut-il pour traiter un signalement ?
+        </button>
+        <div class="faq-answer">
+          Le délai dépend de la nature et de l’urgence du problème.
+          Les autorités priorisent les signalements urgents.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Puis-je suivre l’état de mon signalement ?
+        </button>
+        <div class="faq-answer">
+          Oui, chaque signalement reçoit un numéro de suivi
+          permettant de consulter son évolution.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RGPD -->
+<section class="section gray">
+  <div class="container">
+    <h2>Politique de confidentialité (RGPD)</h2>
+
+    <p>
+      KARAALERT respecte la confidentialité et la protection
+      des données personnelles des utilisateurs.
+    </p>
+
+    <ul>
+      <li>Les données collectées servent uniquement au traitement des signalements.</li>
+      <li>Aucune donnée n’est vendue ou transmise à des tiers non autorisés.</li>
+      <li>Les utilisateurs peuvent demander la suppression de leurs données.</li>
+    </ul>
+
+    <p>
+      Les données sont conservées uniquement pendant la durée nécessaire
+      au traitement des signalements et à des fins statistiques anonymisées.
+    </p>
+  </div>
+</section>
+
+<!-- CGU -->
+<section class="section">
+  <div class="container">
+    <h2>Conditions Générales d’Utilisation (CGU)</h2>
+
+    <p>
+      L’utilisation de la plateforme implique l’acceptation
+      des présentes conditions :
+    </p>
+
+    <ul>
+      <li>Les signalements abusifs ou mensongers sont interdits.</li>
+      <li>Tout utilisateur est responsable des informations transmises.</li>
+      <li>La mairie se réserve le droit de modérer les contenus.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- MENTIONS LEGALES -->
+<section class="section gray">
+  <div class="container">
+    <h2>Mentions légales</h2>
+
+    <p>
+      Plateforme éditée par la Mairie de Kara.<br>
+      Responsable de publication : Autorité municipale compétente.
+    </p>
+
+    <p>
+      Hébergement : à définir.<br>
+      Contact : via la page <a href="contact.html">Contact</a>.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme citoyenne – Ville de Kara</p>
+    </div>
+
+    <div>
+      <a href="contact.html">Contact</a><br>
+      <a href="about.html">À propos</a>
+    </div>
+  </div>
+</footer>
+
+<!-- JS accordéon FAQ -->
+<script>
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>

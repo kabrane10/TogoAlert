@@ -1,0 +1,25 @@
+/* Cards génériques */
+.card {
+    background:#fff;
+    color: #333;
+    padding:var(--padding-card);
+    border-radius:var(--radius);
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+  }
+  
+  /* Cards avec badges et actions */
+  .card h3,h4 {margin-bottom:8px;}
+  .card p {margin-bottom:10px;}
+  .card .badge {margin-right:8px;}
+  .card .actions {margin-top:10px;}
+  .card .actions button {margin-right:5px;}
+  
+  /* Galerie */
+  .card .photos {display:flex; gap:10px; flex-wrap:wrap;}
+  .card .photos img {width:100px; height:100px; object-fit:cover; border-radius:var(--radius);}
+  
+  /* Timeline */
+  .timeline ul {list-style:none; padding-left:0;}
+  .timeline li {margin-bottom:8px; padding-left:12px; border-left:2px solid var(--bleu-principal);}
+  

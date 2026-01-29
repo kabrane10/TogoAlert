@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des annonces – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="./../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="./adminAnnonces.html" class="active">Annonces</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section hero small">
+  <div class="container">
+    <h1>Gestion des annonces</h1>
+    <p>Créez, modifiez ou supprimez des annonces publiques.</p>
+    <button id="addAnnonceBtn" class="btn green">Nouvelle annonce</button>
+  </div>
+</section>
+
+<section class="section gray">
+  <div class="container" id="annoncesContainer"></div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><strong>KARAALERT</strong><p>Plateforme mairie – Ville de Kara</p></div>
+  </div>
+</footer>
+
+<script>
+const annoncesContainer = document.getElementById('annoncesContainer');
+let annonces = JSON.parse(localStorage.getItem('annonces')) || [
+  {titre:'Coupure d’eau', contenu:'Coupure le 30/01 quartier central', date:'2026-01-30'},
+  {titre:'Travaux route principale', contenu:'Du 28/01 au 02/02', date:'2026-01-28'}
+];
+
+function renderAnnonces(){
+  annoncesContainer.innerHTML='';
+  if(annonces.length===0){annoncesContainer.innerHTML='<p>Aucune annonce.</p>';return;}
+  annonces.forEach((a,i)=>{
+    const card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`
+      <h4>${a.titre}</h4>
+      <p>${a.contenu}</p>
+      <small>Publication : ${a.date}</small>
+      <div class="actions">
+        <button class="btn small" onclick="editAnnonce(${i})">Modifier</button>
+        <button class="btn small outline" onclick="deleteAnnonce(${i})">Supprimer</button>
+      </div>
+    `;
+    annoncesContainer.appendChild(card);
+  });
+}
+
+function addAnnonce(){
+  const titre=prompt('Titre de l’annonce :');
+  const contenu=prompt('Contenu :');
+  const date=prompt('Date de publication (YYYY-MM-DD) :', new Date().toISOString().slice(0,10));
+  if(!titre||!contenu) return;
+  annonces.push({titre, contenu, date});
+  localStorage.setItem('annonces', JSON.stringify(annonces));
+  renderAnnonces();
+}
+
+function editAnnonce(i){
+  const titre=prompt('Titre de l’annonce :', annonces[i].titre);
+  const contenu=prompt('Contenu :', annonces[i].contenu);
+  const date=prompt('Date de publication (YYYY-MM-DD) :', annonces[i].date);
+  if(!titre||!contenu) return;
+  annonces[i]={titre, contenu, date};
+  localStorage.setItem('annonces', JSON.stringify(annonces));
+  renderAnnonces();
+}
+
+function deleteAnnonce(i){
+  if(confirm('Confirmer suppression ?')){annonces.splice(i,1);localStorage.setItem('annonces', JSON.stringify(annonces));renderAnnonces();}
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+
+document.getElementById('addAnnonceBtn').addEventListener('click', addAnnonce);
+renderAnnonces();
+</script>
+
+</body>
+</html>

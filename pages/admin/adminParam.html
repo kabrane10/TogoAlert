@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Paramètres système – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="./adminParam.html" class="active">Paramètres</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section hero small">
+  <div class="container">
+    <h1>Paramètres système</h1>
+    <p>Gérez les catégories, zones, notifications et paramètres généraux.</p>
+  </div>
+</section>
+
+<section class="section gray">
+  <div class="container">
+
+    <!-- Catégories -->
+    <div class="card">
+      <h3>Catégories de signalements</h3>
+      <ul id="categoriesList"></ul>
+      <button class="btn small green" onclick="addCategory()">Ajouter catégorie</button>
+    </div>
+
+    <!-- Zones -->
+    <div class="card">
+      <h3>Zones / Quartiers</h3>
+      <ul id="zonesList"></ul>
+      <button class="btn small green" onclick="addZone()">Ajouter zone</button>
+    </div>
+
+    <!-- Notifications -->
+    <div class="card">
+      <h3>Paramètres notifications</h3>
+      <label><input type="checkbox" id="notifEmail"> Notifications email</label><br>
+      <label><input type="checkbox" id="notifSMS"> Notifications SMS</label>
+    </div>
+
+    <!-- Paramètres généraux -->
+    <div class="card">
+      <h3>Paramètres généraux</h3>
+      <label>Nom de la plateforme : <input type="text" id="platformName" value="KARAALERT"></label><br>
+      <label>Ville : <input type="text" id="cityName" value="Kara"></label>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><strong>KARAALERT</strong><p>Plateforme mairie – Ville de Kara</p></div>
+  </div>
+</footer>
+
+<script>
+// Catégories
+let categories = JSON.parse(localStorage.getItem('categories')) || ['Route','Eau/Électricité','Environnement','Sécurité','Autre'];
+const categoriesList = document.getElementById('categoriesList');
+function renderCategories(){
+  categoriesList.innerHTML='';
+  categories.forEach((c,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`${c} <button class="btn small outline" onclick="deleteCategory(${i})">Supprimer</button>`;
+    categoriesList.appendChild(li);
+  });
+}
+function addCategory(){const c=prompt('Nouvelle catégorie :');if(c){categories.push(c);localStorage.setItem('categories',JSON.stringify(categories));renderCategories();}}
+function deleteCategory(i){categories.splice(i,1);localStorage.setItem('categories',JSON.stringify(categories));renderCategories();}
+renderCategories();
+
+// Zones
+let zones = JSON.parse(localStorage.getItem('zones')) || ['Centre','Nord','Sud','Est','Ouest'];
+const zonesList = document.getElementById('zonesList');
+function renderZones(){
+  zonesList.innerHTML='';
+  zones.forEach((z,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`${z} <button class="btn small outline" onclick="deleteZone(${i})">Supprimer</button>`;
+    zonesList.appendChild(li);
+  });
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+function addZone(){const z=prompt('Nouvelle zone :');if(z){zones.push(z);localStorage.setItem('zones',JSON.stringify(zones));renderZones();}}
+function deleteZone(i){zones.splice(i,1);localStorage.setItem('zones',JSON.stringify(zones));renderZones();}
+renderZones();
+
+// Notifications
+const notifEmail = document.getElementById('notifEmail');
+const notifSMS = document.getElementById('notifSMS');
+notifEmail.checked = JSON.parse(localStorage.getItem('notifEmail')) || false;
+notifSMS.checked = JSON.parse(localStorage.getItem('notifSMS')) || false;
+notifEmail.addEventListener('change',()=>{localStorage.setItem('notifEmail', notifEmail.checked);});
+notifSMS.addEventListener('change',()=>{localStorage.setItem('notifSMS', notifSMS.checked);});
+</script>
+
+</body>
+</html>

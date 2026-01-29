@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Nouveau signalement – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/forms.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./citoyen-dashboard.html">Dashboard</a>
+      <a href="./citoyenmesSigal.html">Mes signalements</a>
+      <a href="./citoyenProfil.html">Profil</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero small">
+  <div class="container">
+    <h1>Créer un signalement</h1>
+    <p>Soumettez un problème rencontré dans la ville de Kara.</p>
+  </div>
+</section>
+
+<!-- FORMULAIRE -->
+<section class="section">
+  <div class="container">
+    <form id="signalementForm" class="form">
+
+      <label>
+        Titre du signalement
+        <input type="text" id="titre" maxlength="80" placeholder="Ex: Nid-de-poule route principale" required>
+      </label>
+
+      <label>
+        Catégorie
+        <select id="categorie" required>
+          <option value="">-- Sélectionner --</option>
+          <option>Route</option>
+          <option>Eau/Électricité</option>
+          <option>Environnement</option>
+          <option>Sécurité</option>
+          <option>Autre</option>
+        </select>
+      </label>
+
+      <label>
+        Description
+        <textarea id="description" rows="5" placeholder="Décrivez le problème..." minlength="20" maxlength="1000" required></textarea>
+      </label>
+
+      <label>
+        Localisation
+        <input type="text" id="adresse" placeholder="Entrez votre adresse">
+        <button type="button" id="geolocateBtn" class="btn small">Utiliser ma position</button>
+      </label>
+
+      <label>
+        Photos (0–3)
+        <input type="file" id="photos" accept="image/png, image/jpeg" multiple>
+      </label>
+
+      <fieldset>
+        <legend>Priorité / Urgence</legend>
+        <label><input type="radio" name="urgence" value="Faible" checked> Faible</label>
+        <label><input type="radio" name="urgence" value="Moyenne"> Moyenne</label>
+        <label><input type="radio" name="urgence" value="Haute"> Haute</label>
+      </fieldset>
+
+      <label>
+        Contact (optionnel)
+        <input type="text" placeholder="Nom, email ou téléphone">
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" id="rgpd" required>
+        J’accepte la collecte et le traitement de mes données conformément à la <a href="../faq.html">politique de confidentialité</a>.
+      </label>
+
+      <button type="submit" class="btn green full">Soumettre le signalement</button>
+
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme citoyenne – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : Simulation signalement -->
+<script>
+  const form = document.getElementById('signalementForm');
+  const geolocateBtn = document.getElementById('geolocateBtn');
+
+  // Simulation geolocation
+  geolocateBtn.addEventListener('click', () => {
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById('adresse').value =
+          `Lat: ${pos.coords.latitude.toFixed(5)}, Lng: ${pos.coords.longitude.toFixed(5)}`;
+        alert('Localisation récupérée !');
+      }, () => alert('Impossible de récupérer la position'));
+    } else alert('Géolocalisation non supportée');
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    // Récupération valeurs
+    const signalement = {
+      id: Date.now(),
+      titre: document.getElementById('titre').value,
+      description: document.getElementById('description').value,
+      categorie: document.getElementById('categorie').value,
+      adresse: document.getElementById('adresse').value,
+      statut: 'Non traité',
+      date: new Date().toLocaleDateString(),
+      urgence: document.querySelector('input[name="urgence"]:checked').value
+    };
+
+    // Stockage dans localStorage
+    const signalements = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const STORAGE_KEY = `signalements_${user.email}`;
+    signalements.push(nouveauSignalement);
+   
+    localStorage.setItem('signalements', JSON.stringify(signalements));
+
+    alert(`Merci — votre signalement a été reçu (N° KAL-${signalement.id}).`);
+    form.reset();
+    window.location.href = 'citoyenmesSigal.html';
+  
+  // Admin reçoit quand même une notification globale
+  notifyAdmin("📢 Nouveau signalement de " + user.email);
+  });
+
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+</script>
+
+</body>
+</html>

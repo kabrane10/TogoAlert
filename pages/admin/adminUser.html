@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des utilisateurs – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html" class="active">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="section hero small">
+  <div class="container">
+    <h1>Gestion des utilisateurs</h1>
+    <p>Ajoutez, modifiez ou supprimez des comptes citoyens et agents.</p>
+    <button id="addUserBtn" class="btn green">Ajouter un utilisateur</button>
+  </div>
+</section>
+
+<!-- LISTE UTILISATEURS -->
+<section class="section gray">
+  <div class="container" id="usersContainer">
+    <!-- Liste injectée par JS -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme mairie – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : Gestion utilisateurs -->
+<script>
+  const usersContainer = document.getElementById('usersContainer');
+
+  function renderUsers() {
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    usersContainer.innerHTML = '';
+
+    if(users.length === 0){
+      usersContainer.innerHTML = '<p>Aucun utilisateur enregistré.</p>';
+      return;
+    }
+
+    users.forEach((u, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h4>${u.nom || 'Utilisateur sans nom'}</h4>
+        <p>Email : ${u.email || '-'}</p>
+        <p>Rôle : ${u.role || 'citoyen'}</p>
+        <div class="actions">
+          <button class="btn small" onclick="editUser(${i})">Modifier</button>
+          <button class="btn small outline" onclick="deleteUser(${i})">Supprimer</button>
+        </div>
+      `;
+      usersContainer.appendChild(card);
+    });
+  }
+
+  function addUser(){
+    const nom = prompt('Nom complet :');
+    const email = prompt('Email :');
+    const role = prompt('Rôle (citoyen / agent / admin) :', 'citoyen');
+    if(!nom || !email) return;
+
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push({nom, email, role});
+    localStorage.setItem('users', JSON.stringify(users));
+    renderUsers();
+  }
+
+  function editUser(i){
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const nom = prompt('Nom complet :', users[i].nom);
+    const email = prompt('Email :', users[i].email);
+    const role = prompt('Rôle (citoyen / agent / admin) :', users[i].role);
+    if(!nom || !email) return;
+    users[i] = {nom, email, role};
+    localStorage.setItem('users', JSON.stringify(users));
+    renderUsers();
+  }
+
+  function deleteUser(i){
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    if(confirm('Confirmer suppression ?')){
+      users.splice(i,1);
+      localStorage.setItem('users', JSON.stringify(users));
+      renderUsers();
+    }
+  }
+
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+  document.getElementById('addUserBtn').addEventListener('click', addUser);
+
+  renderUsers();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications Admin – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html" class="active">Notifications</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="section hero small">
+  <div class="container">
+    <h1>Notifications</h1>
+    <p>Consultez toutes les alertes et mises à jour importantes.</p>
+  </div>
+</section>
+
+<!-- LISTE NOTIFICATIONS -->
+<section class="section gray">
+  <div class="container" id="notifContainer">
+    <!-- Notifications injectées par JS -->
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme mairie – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : Centre notifications -->
+
+<script src="../../assets/js/notifications.js"></script>
+
+<script>
+  const notifContainer = document.getElementById('notifContainer');
+
+  // Simulation notifications
+  let notifications = JSON.parse(localStorage.getItem('notifications')) || [
+    {texte: 'Nouveau signalement reçu', date: '2026-01-27', lu: false},
+    {texte: 'Signalement KAL-123456 changé en "En cours"', date: '2026-01-26', lu: true},
+    {texte: 'Zone 2 : Urgence route signalée', date: '2026-01-25', lu: false}
+  ];
+
+  function renderNotifications(){
+    notifContainer.innerHTML = '';
+    if(notifications.length === 0){
+      notifContainer.innerHTML = '<p>Aucune notification pour le moment.</p>';
+      return;
+    }
+
+    notifications.forEach((n, i) => {
+      const card = document.createElement('div');
+      card.className = `card ${n.lu ? 'read' : 'unread'}`;
+      card.innerHTML = `
+        <p>${n.texte}</p>
+        <small>${n.date}</small>
+        <div class="actions">
+          <button class="btn small outline" onclick="toggleRead(${i})">
+            ${n.lu ? 'Marquer non lu' : 'Marquer lu'}
+          </button>
+        </div>
+      `;
+      notifContainer.appendChild(card);
+    });
+  }
+
+  function toggleRead(i){
+    notifications[i].lu = !notifications[i].lu;
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    renderNotifications();
+  }
+
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+
+  renderNotifications();
+</script>
+
+</body>
+</html>

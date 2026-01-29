@@ -1,0 +1,14 @@
+/* Couleurs */
+:root {
+    --bleu-principal: #3357bbc4;
+    --vert-action: #28A745;
+    --jaune-priorite: #FFC107;
+    --gris-clair: #F5F7FA;
+    --texte-principal: #1F2937;
+  
+    --font-base: 'Inter', sans-serif;
+    --radius: 10px;
+    --padding-card: 16px;
+    --padding-btn: 12px 18px;
+  }
+  

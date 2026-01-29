@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Inscription – TOGOALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+</head>
+
+<body class="auth-page">
+
+<!-- HEADER SIMPLE -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">TOGO<span>ALERT</span></div>
+    <a href="index.html">← Retour accueil</a>
+  </div>
+</header>
+
+<!-- CONTENU -->
+<section class="section auth-container">
+  <div class="auth-card">
+
+    <h1>Créer un compte</h1>
+    <p class="muted">
+      Inscrivez-vous pour signaler et suivre les incidents
+    </p>
+
+    <form id="registerForm" class="form">
+
+      <label>
+        Nom complet
+        <input type="text" placeholder="Votre nom" required>
+      </label>
+
+      <label>
+        Email
+        <input type="email" id="email" placeholder="exemple@email.com" required>
+      </label>
+
+      <label>
+        Téléphone (optionnel)
+        <input type="tel" placeholder="+228...">
+      </label>
+
+      <label for="role">Rôle</label>
+      <select id="role">
+          <option value="citoyen" selected>Citoyen</option>
+          <option value="admin">Administration</option>
+      </select>
+
+      <label>
+        Mot de passe
+        <input type="password" id="password" required minlength="8">
+      </label>
+
+      <label>
+        Confirmer le mot de passe
+        <input type="password" id="confirmPassword" required>
+      </label>
+
+      <label class="checkbox">
+        <input type="checkbox" id="rgpd" required>
+        J’accepte la <a href="faq.html">politique de confidentialité</a>
+      </label>
+
+      <button type="submit" class="btn green full">
+        Créer mon compte
+      </button>
+
+      <p class="form-footer">
+        Déjà inscrit ?
+        <a href="login.html">Se connecter</a>
+      </p>
+
+    </form>
+
+    <div id="registerError" class="alert error hidden">
+      Les mots de passe ne correspondent pas.
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer minimal">
+  <div class="container">
+    <small>© 2026 TOGOALERT – Ville de Kara</small>
+  </div>
+</footer>
+
+<!-- JS : simulation inscription -->
+ <script>
+  document.getElementById('registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirmPassword').value;
+
+    if (password !== confirm) {
+      document.getElementById('registerError').classList.remove('hidden');
+      return;
+    }
+
+    // Sauvegarde utilisateur fictif
+    localStorage.setItem('user', JSON.stringify({
+      role: 'citoyen'
+    }));
+
+    alert('Compte créé avec succès');
+    window.location.href = 'citoyen/citoyen-dashboard.html';
+  });
+</script> 
+<script>
+document.getElementById('registerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value; // récupère le rôle
+  
+    // On simule la sauvegarde
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    users.push({email,password,role});
+    localStorage.setItem('users', JSON.stringify(users));
+  
+    alert('Inscription réussie !');
+    window.location.href = 'login.html';
+  });
+
+  notifyAdmin("👤 Nouvel utilisateur inscrit : " + email);
+
+// IMPORTANT : ne rien charger en dashboard ici
+// redirection simple vers login
+
+</script>  
+
+</body>
+</html>
+
+
+

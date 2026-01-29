@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion – TOGOALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../assets/css/variables.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/forms.css">
+</head>
+
+<body class="auth-page">
+
+<!-- HEADER SIMPLE -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">TOGO<span>ALERT</span></div>
+    <a href="../index.html">← Retour accueil</a>
+  </div>
+</header>
+
+<!-- CONTENU -->
+<section class="section auth-container">
+  <div class="auth-card">
+
+    <h1>Connexion</h1>
+    <p class="muted">
+      Connectez-vous pour signaler et suivre les incidents
+    </p>
+
+    <form id="loginForm" class="form">
+
+      <label>
+        Email
+        <input type="email" id="email" placeholder="exemple@email.com" required>
+      </label>
+
+      <label>
+        Mot de passe
+        <input type="password" id="password" placeholder="••••••••" required minlength="8">
+      </label>
+
+      <div class="form-extra">
+        <a href="#">Mot de passe oublié ?</a>
+      </div>
+
+      <button type="submit" class="btn green full">
+        Se connecter
+      </button>
+
+      <p class="form-footer">
+        Pas encore de compte ?
+        <a href="register.html">Créer un compte</a>
+      </p>
+
+    </form>
+
+    <div id="loginError" class="alert error hidden">
+      Email ou mot de passe incorrect.
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer minimal">
+  <div class="container">
+    <small>© 2026 TOGOALERT – Ville de Kara</small>
+  </div>
+</footer>
+
+<!-- JS : simulation connexion -->
+<script>
+//   document.getElementById('loginForm').addEventListener('submit', function (e) {
+//     e.preventDefault();
+
+//     const email = document.getElementById('email').value;
+//     const password = document.getElementById('password').value;
+
+//     // Simulation simple
+//     if (password.length >= 8) {
+//       // Stocker utilisateur fictif
+//       localStorage.setItem('user', JSON.stringify({
+//         email: email,
+//         role: email.includes('admin') ? 'admin' : 'citoyen'
+//       }));
+
+//       // Redirection selon rôle
+//       if (email.includes('admin')) {
+//         window.location.href = 'admin/dashboard.html';
+//       } else {
+//         window.location.href = 'citoyen/dashboard.html';
+//       }
+//     } else {
+//       document.getElementById('loginError').classList.remove('hidden');
+//     }
+//   });
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  const user = users.find(u => u.email === email && u.password === password);
+
+  if(user){
+    localStorage.setItem('currentUser', JSON.stringify(user)); // stocke l'utilisateur connecté
+
+    // Redirection selon rôle
+    if(user.role === 'citoyen'){
+      window.location.href = 'citoyen/citoyen-dashboard.html';
+    } else if(user.role === 'admin'){
+      window.location.href = 'admin/admin-dashboard.html';
+    }
+  } else {
+    alert('Email ou mot de passe incorrect');
+  }
+});
+
+localStorage.setItem('currentUser', JSON.stringify(user));
+
+// 🔁 Initialisation propre du contexte utilisateur
+sessionStorage.setItem('activeUser', user.email);
+
+
+</script>
+
+</body>
+</html>
+
+
+

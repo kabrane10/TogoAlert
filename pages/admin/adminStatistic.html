@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistiques – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="./adminStatistic.html" class="active">Statistiques</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section hero small">
+  <div class="container">
+    <h1>Statistiques</h1>
+    <p>Analyse des signalements et rapports clés.</p>
+  </div>
+</section>
+
+<section class="section gray">
+  <div class="container">
+    <div class="dashboard-stats">
+      <div class="card stat">
+        <h3>Total signalements</h3>
+        <span id="total">0</span>
+      </div>
+      <div class="card stat">
+        <h3>En cours</h3>
+        <span id="encours">0</span>
+      </div>
+      <div class="card stat">
+        <h3>Résolus</h3>
+        <span id="resolus">0</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Types de problèmes les plus fréquents</h3>
+      <ul id="typeProbs"></ul>
+    </div>
+
+    <div class="card">
+      <h3>Rapport mensuel</h3>
+      <canvas id="monthlyChart" width="400" height="200"></canvas>
+      <button class="btn small outline" onclick="exportCSV()">Exporter CSV</button>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><strong>KARAALERT</strong><p>Plateforme mairie – Ville de Kara</p></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+document.getElementById('total').innerText = signalements.length;
+document.getElementById('encours').innerText = signalements.filter(s=>s.statut==='En cours').length;
+document.getElementById('resolus').innerText = signalements.filter(s=>s.statut==='Résolu').length;
+
+// Types fréquents
+const typeCounts = {};
+signalements.forEach(s=>{typeCounts[s.categorie]=(typeCounts[s.categorie]||0)+1;});
+const typeProbs = document.getElementById('typeProbs');
+for(const key in typeCounts){ const li=document.createElement('li'); li.innerText=`${key}: ${typeCounts[key]}`; typeProbs.appendChild(li); }
+
+// Chart mensuel (simulé)
+const ctx = document.getElementById('monthlyChart').getContext('2d');
+const months = ['Jan', 'Feb', 'Mar', 'Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const monthlyData = new Array(12).fill(0);
+signalements.forEach(s=>{
+  const month = new Date(s.date).getMonth();
+  monthlyData[month]++;
+});
+new Chart(ctx, { type:'bar', data:{labels:months,datasets:[{label:'Signalements',data:monthlyData,backgroundColor:'#0B6FA9'}]}});
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+// Export CSV simulé
+function exportCSV(){
+  let csv = 'Titre,Catégorie,Statut,Date\n';
+  signalements.forEach(s=>{csv+=`${s.titre},${s.categorie},${s.statut},${s.date}\n`;});
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='signalements.csv';a.click();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau de bord Admin – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html" class="active">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">
+        🔔 Notifications <span id="notifBadge" class="badge-notif">0</span>
+      </a>
+      <a href="./admin-signalDetail.html"> Détails Signalements</a>
+      <a href="./adminAnnonces.html">Annonces</a>
+      <a href="./adminStatistic.html">Statistiques</a>
+      <a href="./adminParam.html">Paramètre</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+      
+      
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="section hero small">
+  <div class="container">
+    <h1>Tableau de bord Admin</h1>
+    <p>Vue globale des signalements et statistiques de la ville.</p>
+
+    <div class="dashboard-stats">
+      <div class="card stat">
+        <h3>Nouveaux</h3>
+        <span id="nouveaux">0</span>
+      </div>
+      <div class="card stat">
+        <h3>En cours</h3>
+        <span id="encours">0</span>
+      </div>
+      <div class="card stat">
+        <h3>Résolus</h3>
+        <span id="resolus">0</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARTE + LISTE -->
+<section class="section gray">
+  <div class="container two-cols">
+    <div class="card map-placeholder">
+      <p>🗺️ Carte interactive (simulée)</p>
+    </div>
+    <div class="card">
+      <h3>Derniers signalements</h3>
+      <div id="signalementsList" class="cards-grid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme mairie – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : simulation dashboard admin -->
+<script>
+
+let allSignalements = [];
+
+// Parcourir tous les utilisateurs
+Object.keys(localStorage).forEach(key => {
+  if (key.startsWith('signalements_')) {
+    allSignalements = allSignalements.concat(
+      JSON.parse(localStorage.getItem(key))
+    );
+  }
+});
+
+  const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+  const nouveauxSpan = document.getElementById('nouveaux');
+  const encoursSpan = document.getElementById('encours');
+  const resolusSpan = document.getElementById('resolus');
+  const listContainer = document.getElementById('signalementsList');
+
+  // Calcul KPIs
+  nouveauxSpan.innerText = signalements.filter(s => s.statut === 'Non traité').length;
+  encoursSpan.innerText = signalements.filter(s => s.statut === 'En cours').length;
+  resolusSpan.innerText = signalements.filter(s => s.statut === 'Résolu').length;
+
+  // Liste derniers signalements
+  if(signalements.length === 0){
+    listContainer.innerHTML = '<p>Aucun signalement enregistré.</p>';
+  } else {
+    signalements.slice(-5).reverse().forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="badge ${s.statut === 'Résolu' ? 'green' : s.statut === 'En cours' ? 'yellow' : 'red'}">
+          ${s.statut}
+        </span>
+        <h4>${s.titre}</h4>
+        <p>${s.description.substring(0,80)}...</p>
+        <small>${s.date}</small>
+        <a href="admin-signalDetail.html?id=${s.id}" class="btn small outline">Voir</a>
+      `;
+      listContainer.appendChild(card);
+    });
+  }
+
+  // PROTECTIONS DES PAGES ADMIN 
+
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if(!currentUser){
+  window.location.href = '../login.html'; // pas connecté
+} else if(currentUser.role !== 'admin'){ 
+  window.location.href = '../citoyen/citoyen-dashboard.html'; // si pas admin, redirige
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+</script>
+
+
+<!-- pour NOTIFICATION -->
+<script>
+  const notifs = JSON.parse(localStorage.getItem('notifications_admin')) || [];
+  const unread = notifs.filter(n => !n.lu).length;
+  document.getElementById('notifBadge').innerText = unread;
+
+  
+  </script>
+    
+
+</body>
+</html>
+
+<!-- <button onclick="logout()" class="btn small">Déconnexion</button>
+
+<script>
+function logout(){
+  localStorage.removeItem('currentUser');
+  window.location.href = '../login.html';
+}
+
+Effet immédiat :
+
+L’utilisateur est déconnecté
+
+Toute page protégée devient inaccessible
+
+</script> -->

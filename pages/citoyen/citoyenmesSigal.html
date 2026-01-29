@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mes signalements – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./citoyen-dashboard.html">Dashboard</a>
+      <a href="./citoyenmesSigal.html" class="active">Mes signalements</a>
+      <a href="./citoyenProfil.html">Profil</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero small">
+  <div class="container">
+    <h1>Mes signalements</h1>
+    <p>Consultez l’historique et le statut de vos signalements.</p>
+  </div>
+</section>
+
+<!-- FILTRES -->
+<section class="section">
+  <div class="container">
+    <div class="filters">
+      <label>
+        Filtrer par statut :
+        <select id="filterStatus">
+          <option value="Tous">Tous</option>
+          <option value="Non traité">Non traité</option>
+          <option value="En cours">En cours</option>
+          <option value="Résolu">Résolu</option>
+        </select>
+      </label>
+    </div>
+
+    <div id="signalementsList" class="cards-grid">
+      <!-- Signalements injectés par JS -->
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme citoyenne – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : Liste et filtre signalements -->
+<script>
+  const signalementsList = document.getElementById('signalementsList');
+  const filterStatus = document.getElementById('filterStatus');
+
+  function renderSignalements(status='Tous'){
+    const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+    signalementsList.innerHTML = '';
+
+    const filtered = status === 'Tous' ? signalements : signalements.filter(s => s.statut === status);
+
+    if(filtered.length === 0){
+      signalementsList.innerHTML = '<p>Aucun signalement correspondant.</p>';
+      return;
+    }
+
+    filtered.slice().reverse().forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="badge ${s.statut === 'Résolu' ? 'green' : s.statut === 'En cours' ? 'yellow' : 'red'}">${s.statut}</span>
+        <h4>${s.titre}</h4>
+        <p>${s.description.substring(0,100)}...</p>
+        <small>${s.date}</small>
+        <a href="citoyenSignalDetail.html?id=${s.id}" class="btn small outline">Voir</a>
+      `;
+      signalementsList.appendChild(card);
+    });
+  }
+
+  filterStatus.addEventListener('change', () => renderSignalements(filterStatus.value));
+
+  // Initial render
+  renderSignalements();
+</script>
+
+<script>
+ function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+  
+  // Effet immédiat :
+  
+  // L’utilisateur est déconnecté
+  
+  // Toute page protégée devient inaccessible
+  
+  </script> 
+
+</body>
+</html>

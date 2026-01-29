@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des signalements – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html" class="active">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO / FILTRES -->
+<section class="section hero small">
+  <div class="container">
+    <h1>Gestion des signalements</h1>
+    <p>Filtrez, consultez et gérez tous les signalements.</p>
+
+    <div class="filters">
+      <label>
+        Statut :
+        <select id="filterStatus">
+          <option value="Tous">Tous</option>
+          <option value="Non traité">Non traité</option>
+          <option value="En cours">En cours</option>
+          <option value="Résolu">Résolu</option>
+        </select>
+      </label>
+      <label>
+        Catégorie :
+        <select id="filterCategorie">
+          <option value="Tous">Tous</option>
+          <option>Route</option>
+          <option>Eau/Électricité</option>
+          <option>Environnement</option>
+          <option>Sécurité</option>
+          <option>Autre</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</section>
+
+<!-- LISTE SIGNALMENTS -->
+<section class="section gray">
+  <div class="container">
+    <div id="signalementsList" class="cards-grid"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme mairie – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS : Gestion signalements -->
+<script>
+  const listContainer = document.getElementById('signalementsList');
+  const filterStatus = document.getElementById('filterStatus');
+  const filterCategorie = document.getElementById('filterCategorie');
+
+  function renderSignalements() {
+    const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+    const statusVal = filterStatus.value;
+    const catVal = filterCategorie.value;
+
+    listContainer.innerHTML = '';
+
+    const filtered = signalements.filter(s => {
+      return (statusVal === 'Tous' || s.statut === statusVal) &&
+             (catVal === 'Tous' || s.categorie === catVal);
+    });
+
+    if(filtered.length === 0){
+      listContainer.innerHTML = '<p>Aucun signalement correspondant.</p>';
+      return;
+    }
+
+    filtered.slice().reverse().forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="badge ${s.statut === 'Résolu' ? 'green' : s.statut === 'En cours' ? 'yellow' : 'red'}">${s.statut}</span>
+        <h4>${s.titre}</h4>
+        <p>${s.description.substring(0,80)}...</p>
+        <small>${s.date}</small>
+        <div class="actions">
+          <button class="btn small" onclick="changerStatut(${s.id})">Changer statut</button>
+          <a href="admin-signalDetail.html?id=${s.id}" class="btn small outline">Voir détail</a>
+        </div>
+      `;
+      listContainer.appendChild(card);
+    });
+  }
+
+  function changerStatut(id){
+    const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+    const s = signalements.find(s => s.id === id);
+    if(!s) return;
+    if(s.statut === 'Non traité') s.statut = 'En cours';
+    else if(s.statut === 'En cours') s.statut = 'Résolu';
+    else s.statut = 'Non traité';
+    localStorage.setItem('signalements', JSON.stringify(signalements));
+    renderSignalements();
+  }
+
+  filterStatus.addEventListener('change', renderSignalements);
+  filterCategorie.addEventListener('change', renderSignalements);
+
+  renderSignalements();
+
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+</script>
+
+</body>
+</html>

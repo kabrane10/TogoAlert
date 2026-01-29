@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./citoyen-dashboard.html">Dashboard</a>
+      <a href="./citoyenmesSigal.html">Mes signalements</a>
+      <a href="./citoyenNotif.html" class="active">
+        🔔 Notifications <span id="notifBadge" class="badge-notif">0</span>
+      </a>
+      <a href="./citoyenProfil.html">Profil</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<div id="notifList"></div>
+<section class="section hero small">
+  <div class="container">
+    <h1>Notifications</h1>
+    <p>Consultez toutes les alertes liées à vos signalements et annonces publiques.</p>
+  </div>
+</section>
+
+<section class="section gray">
+  <div class="container" id="notifContainer"></div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><strong>KARAALERT</strong><p>Plateforme citoyenne – Ville de Kara</p></div>
+  </div>
+</footer>
+
+<script src="../../assets/js/notifications.js"></script>
+<script>
+const notifContainer = document.getElementById('notifContainer');
+
+// Simuler notifications citoyen
+let notifications = JSON.parse(localStorage.getItem('citoyenNotifications')) || [
+  {texte:'Signalement KAL-2025-00123 : statut En cours', date:'2026-01-27', lu:false},
+  {texte:'Annonce publique : Travaux route principale', date:'2026-01-26', lu:true}
+];
+
+function renderNotifications(){
+  notifContainer.innerHTML = '';
+  if(notifications.length===0){notifContainer.innerHTML='<p>Aucune notification.</p>';return;}
+  notifications.forEach((n,i)=>{
+    const card = document.createElement('div');
+    card.className=`card ${n.lu?'read':'unread'}`;
+    card.innerHTML=`
+      <p>${n.texte}</p>
+      <small>${n.date}</small>
+      <div class="actions">
+        <button class="btn small outline" onclick="toggleRead(${i})">${n.lu?'Marquer non lu':'Marquer lu'}</button>
+      </div>
+    `;
+    notifContainer.appendChild(card);
+  });
+}
+
+function toggleRead(i){notifications[i].lu=!notifications[i].lu;localStorage.setItem('citoyenNotifications',JSON.stringify(notifications));renderNotifications();}
+
+renderNotifications();
+</script>
+
+
+<!-- POUR NOTIFICATION -->
+
+
+<script>
+  const user = JSON.parse(localStorage.getItem('currentUser'));
+  const notifData = JSON.parse(localStorage.getItem('notifications_citoyen')) || {};
+  const notifs = notifData[user.email] || [];
+  
+  const unread = notifs.filter(n => !n.lu).length;
+  document.getElementById('notifBadge').innerText = unread;
+  </script>
+  <div id="notifList"></div>
+
+  <script>
+  
+  const container = document.getElementById('notifList');
+  container.innerHTML = '';
+  
+  notifs.forEach(n => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `<p>${n.message}</p><small>${n.date}</small>`;
+    container.appendChild(div);
+    n.lu = true; // marquer comme lue
+  });
+  
+  data[user.email] = notifs;
+  localStorage.setItem('notifications_citoyen', JSON.stringify(data));
+
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+  </script>
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détail signalement Admin – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/dashboard.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="./admin-dashboard.html">Dashboard</a>
+      <a href="./admin-signalements.html">Signalements</a>
+      <a href="./adminUser.html">Utilisateurs</a>
+      <a href="./adminNotif.html">Notifications</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container" id="signalementDetail"></div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div><strong>KARAALERT</strong><p>Plateforme mairie – Ville de Kara</p></div>
+  </div>
+</footer>
+
+<script>
+// Récupération ID depuis URL
+const params = new URLSearchParams(window.location.search);
+const id = parseInt(params.get('id'));
+const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+const s = signalements.find(item => item.id === id);
+const container = document.getElementById('signalementDetail');
+
+if(!s){ container.innerHTML='<p>Signalement introuvable.</p>'; } 
+else {
+  container.innerHTML = `
+    <h2>${s.titre}</h2>
+    <span class="badge ${s.statut==='Résolu'?'green':s.statut==='En cours'?'yellow':'red'}">${s.statut}</span>
+    <p><strong>Catégorie :</strong> ${s.categorie}</p>
+    <p><strong>Date :</strong> ${s.date}</p>
+    <p><strong>Description :</strong><br>${s.description}</p>
+
+    <div class="gallery card">
+      <p>📸 Photos :</p>
+      <div class="photos">
+        <img src="../assets/images/photo1.png" alt="photo1">
+        <img src="../assets/images/photo2.png" alt="photo2">
+      </div>
+    </div>
+
+    <div class="map-placeholder card">
+      <p>🗺️ Carte localisation : ${s.adresse||'Non renseignée'}</p>
+    </div>
+
+    <div class="timeline card">
+      <h3>Historique du traitement</h3>
+      <ul>
+        <li>Reçue — ${s.date}</li>
+        <li>En cours — ${s.statut==='En cours'?new Date().toLocaleDateString():'-'}</li>
+        <li>Résolue — ${s.statut==='Résolu'?new Date().toLocaleDateString():'-'}</li>
+      </ul>
+    </div>
+
+    <div class="actions">
+      <button class="btn small" onclick="changerStatut()">Changer statut</button>
+      <button class="btn small outline" onclick="attribuerAgent()">Attribuer agent</button>
+      <button class="btn small outline" onclick="ajouterCommentaire()">Ajouter commentaire</button>
+    </div>
+  `;
+
+  function changerStatut(){
+    if(s.statut==='Non traité') s.statut='En cours';
+    else if(s.statut==='En cours') s.statut='Résolu';
+    else s.statut='Non traité';
+    localStorage.setItem('signalements',JSON.stringify(signalements));
+    alert('Statut modifié: '+s.statut);
+    location.reload();
+  }
+
+  function attribuerAgent(){
+    const agent = prompt('Nom de l’agent à attribuer :');
+    if(agent){alert('Signalement attribué à '+agent);}
+  }
+
+  function ajouterCommentaire(){
+    const com = prompt('Ajouter commentaire interne :');
+    if(com){alert('Commentaire ajouté : '+com);}
+  }
+
+  // Exemple DE STIMULATION DE NOTIFICATION
+notifyCitoyen(signalement.email, 
+  `📌 Votre signalement "${signalement.titre}" est maintenant : ${nouveauStatut}`
+);
+
+}
+
+function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+</script>
+
+</body>
+</html>

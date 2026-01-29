@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Tableau de bord – KARAALERT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS global -->
+  <link rel="stylesheet" href="../../assets/css/variables.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/cards.css">
+  
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-flex">
+    <div class="logo">KARA<span>ALERT</span></div>
+    <nav class="nav">
+      <a href="../../index.html">Accueil</a>
+      <a href="./dashboard.html" class="active">Dashboard</a>
+      <a href="./citoyenmesSigal.html">Mes signalements</a>
+      <a href="./citoyenProfil.html">Profil</a>
+      <a href="../login.html" class="btn small">Déconnexion</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO / Résumé -->
+<section class="section hero small">
+  <div class="container">
+    <h1>Bonjour, citoyen !</h1>
+    <p>Voici un aperçu de vos signalements récents.</p>
+
+    <div class="dashboard-stats">
+      <div class="card stat">
+        <h3>Total signalements</h3>
+        <span id="totalSignalements">0</span>
+      </div>
+      <div class="card stat">
+        <h3>En cours</h3>
+        <span id="enCoursSignalements">0</span>
+      </div>
+      <div class="card stat">
+        <h3>Résolus</h3>
+        <span id="resolusSignalements">0</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="./citoyen-nvSignal.html" class="btn green">Nouveau signalement</a>
+    </div>
+  </div>
+</section>
+
+<!-- DERNIERS SIGNALMENTS -->
+<section class="section gray">
+  <div class="container">
+    <h2>Mes signalements récents</h2>
+    <div id="signalementsList" class="cards-grid">
+      <!-- Signalements injectés par JS -->
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <strong>KARAALERT</strong>
+      <p>Plateforme citoyenne – Ville de Kara</p>
+    </div>
+  </div>
+</footer>
+
+<!-- JS simulation dashboard -->
+<script>
+  // Récupération des signalements depuis localStorage
+  const signalements = JSON.parse(localStorage.getItem('signalements')) || [];
+
+  document.getElementById('totalSignalements').innerText = signalements.length;
+  document.getElementById('enCoursSignalements').innerText = signalements.filter(s => s.statut === 'En cours').length;
+  document.getElementById('resolusSignalements').innerText = signalements.filter(s => s.statut === 'Résolu').length;
+
+  const listContainer = document.getElementById('signalementsList');
+
+  if(signalements.length === 0){
+    listContainer.innerHTML = '<p>Aucun signalement enregistré pour le moment.</p>';
+  } else {
+    signalements.slice(-5).reverse().forEach(s => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <span class="badge ${s.statut === 'Résolu' ? 'green' : s.statut === 'En cours' ? 'yellow' : 'red'}">${s.statut}</span>
+        <h4>${s.titre || 'Signalement sans titre'}</h4>
+        <p>${s.description || ''}</p>
+        <small>${s.date}</small>
+        <a href="citoyenSignalDetail.html?id=${s.id}" class="btn small outline">Voir</a>
+      `;
+      listContainer.appendChild(card);
+    });
+  }
+
+  const user = JSON.parse(localStorage.getItem('currentUser'));
+  const STORAGE_KEY = `signalements_${user.email}`;
+const allSignalements = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+// 🔥 FILTRAGE CRUCIAL
+const mesSignalements = allSignalements.filter(
+  s => s.owner === user.email
+);
+
+// Dashboard vide si nouvel utilisateur
+document.getElementById('total').innerText = mesSignalements.length;
+document.getElementById('enCours').innerText =
+  mesSignalements.filter(s => s.statut === 'En cours').length;
+</script>
+
+<script>
+ 
+  function logout() {
+  localStorage.removeItem('currentUser');
+  sessionStorage.clear(); // 🔥 reset UI
+  window.location.href = '../login.html';
+}
+
+  // Effet immédiat :
+  
+  // L’utilisateur est déconnecté
+  
+  // Toute page protégée devient inaccessible
+  
+  </script> 
+
+
+</body>
+</html>
