@@ -93,7 +93,7 @@
       card.innerHTML = `
         <span class="badge ${s.statut === 'Résolu' ? 'green' : s.statut === 'En cours' ? 'yellow' : 'red'}">${s.statut}</span>
         <h4>${s.titre}</h4>
-        <p>${s.description.substring(0,100)}...</p>
+        <p>${s.description.substring(0,20)}...</p>
         <small>${s.date}</small>
         <a href="citoyenSignalDetail.html?id=${s.id}" class="btn small outline">Voir</a>
       `;

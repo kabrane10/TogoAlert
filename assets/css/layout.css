@@ -27,3 +27,49 @@
 .hero{padding:60px 0; text-align:center; background: var(--bleu-principal); color:#fff;}
 .hero-buttons{margin-top:20px;}
 .hero-buttons .btn{margin:5px;}
+
+.card {
+  transition: 
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Effet focus clavier (accessibilité) */
+.card:focus-within {
+  outline: 2px solid var(--bleu-principal);
+}
+@media (max-width: 768px) {
+
+    .container {
+      width: 94%;
+    }
+  
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .header-flex {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .nav a {
+      margin-left: 0;
+    }
+  
+    .card {
+      padding: 18px;
+    }
+  }
+  

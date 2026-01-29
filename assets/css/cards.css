@@ -7,6 +7,23 @@
     box-shadow:0 2px 6px rgba(0,0,0,0.1);
     margin-bottom:20px;
   }
+  .card {
+    transition: 
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Effet focus clavier (accessibilité) */
+  .card:focus-within {
+    outline: 2px solid var(--bleu-principal);
+  }
+  
   
   /* Cards avec badges et actions */
   .card h3,h4 {margin-bottom:8px;}

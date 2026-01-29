@@ -8,6 +8,31 @@
   <link rel="stylesheet" href="./assets/css/base.css">
   <link rel="stylesheet" href="./assets/css/layout.css">
   <link rel="stylesheet" href="./assets/css/components.css">
+
+  <style>
+    .demo {
+  padding: 60px 0;
+  background: #f5f7fa;
+  text-align: center;
+}
+
+.demo h2 {
+  margin-bottom: 10px;
+}
+
+.demo p {
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.demo-media video {
+  width: 100%;
+  max-width: 800px;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+  </style>
 </head>
 
 <body>
@@ -52,10 +77,27 @@
     </div>
 
     <div class="hero-illustration">
-      <img src="./assets/images/Petit prince.jpeg" alt="Carte Kara">
+      <img src="./assets/images/Petit prince.jpe" alt="Carte Kara">
     </div>
   </div>
 </section>
+
+<section class="demo">
+  <div class="container">
+    <h2> Comment fonctionne TogoAlert ?</h2>
+    <p>Découvrez comment signaler un problème en moins d’une minute.</p>
+
+    <div class="demo-media">
+      <video controls poster="assets/img/demo-cover.jpg">
+        <source src="assets/video/demo.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo.
+      </video>
+      <!-- <video autoplay muted loop playsinline> -->
+
+    </div>
+  </div>
+</section>
+
 
 <!-- A PROPOS -->
 <section class="section">
